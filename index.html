@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Joshua &amp; Lucia — November 7, 2026 · Mampong, Ghana</title>
+<meta name="description" content="Joshua & Lucia are getting married! Saturday, November 7, 2026 at Anagkazo Campus, Mampong-Akuapem, Ghana. RSVP and watch live.">
+<meta property="og:title" content="Joshua & Lucia — November 7, 2026">
+<meta property="og:description" content="Join us in person in Mampong, Ghana — or live online. RSVP here.">
+<meta property="og:image" content="photos/joshua-lucia-20.jpg">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💍</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,300;1,9..144,400&family=Karla:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="kente-ribbon" aria-hidden="true"></div>
+
+<!-- LIVE BANNER — hidden until the backend says we're live -->
+<a id="liveBanner" class="live-banner" href="#" target="_blank" rel="noopener" hidden>
+  <span class="live-dot"></span> WE'RE LIVE — tap to watch the wedding now
+</a>
+
+<nav class="nav">
+  <span class="nav-mono">J&nbsp;·&nbsp;L</span>
+  <div class="nav-links">
+    <a href="#story">Our Story</a>
+    <a href="#details">Details</a>
+    <a href="#live">Watch Live</a>
+    <a href="#faq">FAQ</a>
+    <a href="#rsvp" class="nav-rsvp">RSVP</a>
+  </div>
+</nav>
+
+<!-- ======================= HERO ======================= -->
+<header class="hero">
+  <p class="hero-eyebrow reveal">Together with their families</p>
+  <h1 class="hero-names reveal">Joshua <span class="amp">&amp;</span> Lucia</h1>
+  <p class="hero-invite reveal">joyfully invite you to celebrate their marriage</p>
+
+  <div class="hero-datebar reveal">
+    <span>Saturday</span>
+    <span class="datebar-date">November 7, 2026</span>
+    <span>9:30 AM GMT</span>
+  </div>
+  <p class="hero-venue reveal">Anagkazo Campus · Mampong-Akuapem · Ghana</p>
+
+  <figure class="hero-photo reveal">
+    <img src="photos/joshua-lucia-20.jpg" alt="Joshua and Lucia smiling together among green vines">
+  </figure>
+
+  <div class="countdown reveal" id="countdown" aria-label="Countdown to the wedding">
+    <div><b id="cdDays">–</b><span>days</span></div>
+    <div><b id="cdHours">–</b><span>hours</span></div>
+    <div><b id="cdMins">–</b><span>minutes</span></div>
+    <div><b id="cdSecs">–</b><span>seconds</span></div>
+  </div>
+
+  <a class="btn btn-primary hero-cta reveal" href="#rsvp">RSVP now</a>
+</header>
+
+<!-- ======================= STORY ======================= -->
+<section class="section" id="story">
+  <p class="section-eyebrow">№ 1 — Our Story</p>
+  <h2 class="section-title">Two lives, one journey</h2>
+  <div class="story-grid">
+    <figure class="story-photo tilt-l"><img src="photos/joshua-lucia-14.jpg" alt="Joshua and Lucia laughing together"></figure>
+    <div class="story-text">
+      <p>What began as friendship grew — quietly, surely — into something neither of us could ignore. Through seasons in Ghana and America, across time zones and airport goodbyes, God kept writing our story.</p>
+      <p>Now we're asking the people we love most, near and far, to stand with us as we begin the rest of it.</p>
+      <p class="story-sig">— Joshua &amp; Lucia</p>
+    </div>
+    <figure class="story-photo tilt-r"><img src="photos/joshua-lucia-32.jpg" alt="Joshua and Lucia at a café"></figure>
+  </div>
+</section>
+
+<!-- ======================= DETAILS ======================= -->
+<section class="section section-green" id="details">
+  <p class="section-eyebrow light">№ 2 — The Details</p>
+  <h2 class="section-title light">The day itself</h2>
+  <div class="details-grid">
+    <div class="detail-card">
+      <h3>The Ceremony</h3>
+      <p class="detail-big">Saturday, Nov 7, 2026<br>9:30 AM</p>
+      <p>Please be seated by 9:00 AM.<br>The service begins promptly.</p>
+    </div>
+    <div class="detail-card">
+      <h3>The Venue</h3>
+      <p class="detail-big">Anagkazo Campus</p>
+      <p>Mampong-Akuapem, Eastern Region, Ghana — about 90 minutes from Accra.</p>
+      <a class="detail-link" href="https://maps.google.com/?q=Anagkazo+Bible+and+Ministry+Training+Center+Mampong+Ghana" target="_blank" rel="noopener">Open in Google Maps ↗</a>
+    </div>
+    <div class="detail-card">
+      <h3>Watching From Afar</h3>
+      <p class="detail-big">Live online</p>
+      <p>Can't make it to Ghana? The full ceremony streams live — RSVP "online" and we'll message you the link the moment it starts.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= WATCH LIVE ======================= -->
+<section class="section" id="live">
+  <p class="section-eyebrow">№ 3 — Watch Live</p>
+  <h2 class="section-title">The livestream</h2>
+  <div class="live-box" id="liveBox">
+    <!-- state swapped by js/main.js -->
+    <div class="live-waiting" id="liveWaiting">
+      <p class="live-badge-idle">● Not live yet</p>
+      <p>The live link will appear right here on the wedding day.<br>
+      Want a text or email the moment we go live? Say yes in your RSVP below.</p>
+    </div>
+    <div class="live-now" id="liveNow" hidden>
+      <p class="live-badge-on">● LIVE NOW</p>
+      <a class="btn btn-live" id="liveLink" href="#" target="_blank" rel="noopener">Watch the wedding live ▶</a>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= RSVP ======================= -->
+<section class="section section-paper" id="rsvp">
+  <p class="section-eyebrow">№ 4 — RSVP</p>
+  <h2 class="section-title">Kindly reply</h2>
+  <p class="rsvp-sub">by September 30, 2026 · whether you're coming to Mampong or joining from your couch</p>
+
+  <form id="rsvpForm" class="rsvp-form" novalidate>
+    <div class="field">
+      <label for="fName">Full name *</label>
+      <input id="fName" name="name" type="text" required autocomplete="name" placeholder="Ama Mensah">
+    </div>
+
+    <div class="field">
+      <label for="fEmail">Email *</label>
+      <input id="fEmail" name="email" type="email" required autocomplete="email" placeholder="you@example.com">
+    </div>
+
+    <div class="field field-phone">
+      <label for="fPhone">Phone number *</label>
+      <div class="phone-row">
+        <select id="fCountry" name="countryCode" aria-label="Country code">
+          <option value="+233">🇬🇭 +233</option>
+          <option value="+1">🇺🇸 +1</option>
+          <option value="other">🌍 Other</option>
+        </select>
+        <input id="fPhone" name="phone" type="tel" required autocomplete="tel" placeholder="24 123 4567">
+      </div>
+      <small class="field-hint" id="phoneHint">Ghana numbers: you can type it with or without the leading 0.</small>
+    </div>
+
+    <div class="field">
+      <span class="label">Will you attend? *</span>
+      <div class="choice-row" role="radiogroup">
+        <label class="choice"><input type="radio" name="attending" value="In person" required><span>🕊 In person, in Ghana</span></label>
+        <label class="choice"><input type="radio" name="attending" value="Online"><span>💻 Online, via livestream</span></label>
+        <label class="choice"><input type="radio" name="attending" value="Not attending"><span>💌 Sadly can't make it</span></label>
+      </div>
+    </div>
+
+    <div class="field" id="guestsField" hidden>
+      <label for="fGuests">How many in your party (including you)?</label>
+      <select id="fGuests" name="guests">
+        <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <span class="label">How should we send you updates &amp; reminders? *</span>
+      <div class="choice-row">
+        <label class="choice"><input type="radio" name="preferredContact" value="Email" required checked><span>✉️ Email</span></label>
+        <label class="choice"><input type="radio" name="preferredContact" value="SMS"><span>📱 Text message</span></label>
+        <label class="choice"><input type="radio" name="preferredContact" value="WhatsApp"><span>💬 WhatsApp</span></label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="choice choice-wide">
+        <input type="checkbox" id="fNotify" name="notifyLive" value="Yes" checked>
+        <span>🔔 Message me the moment the wedding goes live</span>
+      </label>
+    </div>
+
+    <div class="field">
+      <label for="fMessage">A note for Joshua &amp; Lucia (optional)</label>
+      <textarea id="fMessage" name="message" rows="3" placeholder="We're so happy for you both…"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary" id="submitBtn">Send my RSVP</button>
+    <p class="form-status" id="formStatus" role="status"></p>
+  </form>
+</section>
+
+<!-- ======================= FAQ ======================= -->
+<section class="section" id="faq">
+  <p class="section-eyebrow">№ 5 — Good to Know</p>
+  <h2 class="section-title">Questions, answered</h2>
+  <div class="faq-list">
+    <details>
+      <summary>What should I wear?</summary>
+      <p>Formal / traditional attire. Kente and other traditional wear are warmly encouraged — it's a celebration!</p>
+    </details>
+    <details>
+      <summary>How do I get to Mampong from Accra?</summary>
+      <p>Anagkazo Campus is in Mampong-Akuapem, roughly 90 minutes' drive from Accra through Aburi. Flying in? Kotoka International Airport (ACC) is your stop — plan to arrive by Friday, November 6.</p>
+    </details>
+    <details>
+      <summary>Can I change my RSVP later?</summary>
+      <p>Yes — just fill the form again with the same email address and your answer updates automatically.</p>
+    </details>
+    <details>
+      <summary>What time should I arrive?</summary>
+      <p>Doors open at 8:30 AM; please be seated by 9:00 AM. The ceremony begins at 9:30 AM sharp.</p>
+    </details>
+    <details>
+      <summary>Gifts?</summary>
+      <p>Your presence — in person or online — is the gift. Details on giving will be shared closer to the day.</p>
+    </details>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="kente-ribbon" aria-hidden="true"></div>
+  <p class="footer-names">Joshua <span class="amp">&amp;</span> Lucia</p>
+  <p class="footer-date">07 · 11 · 2026 — Mampong, Ghana</p>
+</footer>
+
+<script src="js/config.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

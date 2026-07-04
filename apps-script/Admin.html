@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+<head>
+<base target="_top">
+<meta charset="utf-8">
+<style>
+  :root {
+    --green: #1e3d2f; --green-2: #2d5a45; --terra: #c47a3d; --gold: #b98a2f;
+    --paper: #faf6ef; --ink: #2b2620; --line: #e5dccb;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font: 15px/1.55 Georgia, 'Times New Roman', serif; background: var(--paper); color: var(--ink); padding: 24px; }
+  .ribbon { height: 6px; background: repeating-linear-gradient(90deg, var(--green) 0 24px, var(--gold) 24px 32px, var(--terra) 32px 56px, var(--ink) 56px 60px); border-radius: 3px; margin-bottom: 20px; }
+  h1 { font-size: 26px; color: var(--green); letter-spacing: .5px; }
+  h1 small { color: var(--terra); font-size: 14px; letter-spacing: 2px; text-transform: uppercase; display: block; margin-top: 2px; }
+  h2 { font-size: 13px; text-transform: uppercase; letter-spacing: 2px; color: var(--terra); margin-bottom: 12px; border-bottom: 1px solid var(--line); padding-bottom: 6px; }
+  .wrap { max-width: 1080px; margin: 0 auto; }
+  .top { display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 10px; margin-bottom: 18px; }
+  .top a { color: var(--green-2); }
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-bottom: 24px; }
+  .card { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; }
+  .card b { display: block; font-size: 26px; color: var(--green); }
+  .card span { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: #8a7f6d; }
+  .panel { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 18px; margin-bottom: 20px; }
+  label { display: block; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: #8a7f6d; margin: 10px 0 4px; }
+  input, select, textarea { width: 100%; padding: 9px 10px; border: 1px solid var(--line); border-radius: 6px; font: inherit; background: var(--paper); }
+  textarea { min-height: 110px; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  button { background: var(--green); color: #fff; border: 0; border-radius: 6px; padding: 10px 18px; font: inherit; cursor: pointer; margin: 12px 8px 0 0; }
+  button:hover { background: var(--green-2); }
+  button.ghost { background: transparent; color: var(--green); border: 1px solid var(--green); }
+  button.live { background: #b3261e; }
+  button:disabled { opacity: .5; cursor: wait; }
+  .status { margin-top: 10px; padding: 10px; border-radius: 6px; font-size: 14px; display: none; }
+  .status.ok { display: block; background: #e8f2e9; color: var(--green); }
+  .status.err { display: block; background: #fbe9e7; color: #b3261e; }
+  .hint { font-size: 13px; color: #8a7f6d; margin-top: 6px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { text-transform: uppercase; font-size: 11px; letter-spacing: 1px; color: #8a7f6d; }
+  .pill { display: inline-block; padding: 2px 8px; border-radius: 99px; font-size: 11.5px; }
+  .pill.inperson { background: #e8f2e9; color: var(--green); }
+  .pill.online { background: #fdf1e3; color: var(--terra); }
+  .pill.no { background: #f0ece4; color: #8a7f6d; }
+  .walinks a { display: block; margin: 4px 0; color: var(--green-2); }
+  .livebadge { display: inline-block; padding: 3px 10px; border-radius: 99px; background: #b3261e; color: #fff; font-size: 12px; letter-spacing: 1px; }
+  @media (max-width: 720px) { .row { grid-template-columns: 1fr; } body { padding: 12px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="ribbon"></div>
+  <div class="top">
+    <h1>Joshua &amp; Lucia <small>Wedding Admin — November 7, 2026</small></h1>
+    <div id="meta" class="hint">Loading…</div>
+  </div>
+
+  <div class="cards" id="cards"></div>
+
+  <div class="panel">
+    <h2>📣 Send a message to guests</h2>
+    <div class="row">
+      <div>
+        <label>Who gets it</label>
+        <select id="audience">
+          <option value="all">Everyone who RSVP'd</option>
+          <option value="attending">Attending (in person + online)</option>
+          <option value="inperson">In person only</option>
+          <option value="online">Online only</option>
+          <option value="notifylive">Wants livestream alert</option>
+          <option value="ghana">Ghana numbers</option>
+          <option value="usa">US numbers</option>
+        </select>
+      </div>
+      <div>
+        <label>How</label>
+        <select id="channel">
+          <option value="preferred">Each guest's preferred channel</option>
+          <option value="email">Email everyone</option>
+          <option value="sms">SMS everyone (needs Twilio)</option>
+        </select>
+      </div>
+    </div>
+    <label>Email subject</label>
+    <input id="subject" placeholder="A note from Joshua & Lucia 💍">
+    <label>Message</label>
+    <textarea id="body" placeholder="Hi {{name}}, …"></textarea>
+    <div class="hint">Merge tags: {{name}} {{fullname}} {{date}} {{time}} {{venue}} {{website}} {{livestream}}</div>
+    <button id="btnTest" class="ghost">Send test to me first</button>
+    <button id="btnSend">Send to guests</button>
+    <div class="status" id="msgStatus"></div>
+  </div>
+
+  <div class="panel">
+    <h2>🔴 Livestream</h2>
+    <p class="hint" id="liveState"></p>
+    <label>Livestream link (YouTube / Facebook Live)</label>
+    <input id="liveUrl" placeholder="https://youtube.com/live/…">
+    <button id="btnSaveLive" class="ghost">Save link only</button>
+    <button id="btnGoLive" class="live">🔴 GO LIVE + notify opt-ins</button>
+    <button id="btnEndLive" class="ghost">End live</button>
+    <div class="status" id="liveStatus"></div>
+  </div>
+
+  <div class="panel">
+    <h2>💬 WhatsApp blast (free — no Twilio needed)</h2>
+    <p class="hint">Generates a tap-to-send WhatsApp link per guest with your message pre-filled. Great for Ghana numbers. Tap each link and hit send — takes ~5 seconds per person.</p>
+    <label>Message</label>
+    <textarea id="waBody" placeholder="Hi {{name}}! …"></textarea>
+    <button id="btnWa" class="ghost">Generate WhatsApp links</button>
+    <div class="walinks" id="waLinks"></div>
+  </div>
+
+  <div class="panel">
+    <h2>📋 Guest list</h2>
+    <div id="guestTable">Loading…</div>
+  </div>
+</div>
+
+<script>
+  var KEY = '<?= adminKey ?>';
+  var $ = function (id) { return document.getElementById(id); };
+
+  function refresh() {
+    google.script.run.withSuccessHandler(render).withFailureHandler(function (e) {
+      $('meta').textContent = 'Error: ' + e.message;
+    }).getAdminData(KEY);
+  }
+
+  function render(d) {
+    $('meta').innerHTML = '<b>' + d.daysLeft + ' days to go</b> · ' +
+      (d.isLive ? '<span class="livebadge">LIVE NOW</span> · ' : '') +
+      'Email quota left today: ' + d.emailQuotaLeft + ' · SMS: ' + (d.twilioConfigured ? 'ready ✓' : 'not set up') +
+      ' · <a href="' + d.sheetUrl + '" target="_blank">Open Google Sheet ↗</a>';
+
+    var s = d.stats;
+    $('cards').innerHTML = [
+      ['Total RSVPs', s.total], ['In person', s.inPerson], ['Online', s.online],
+      ['Can’t attend', s.notAttending], ['In-person guests', s.totalGuests],
+      ['Live alerts', s.notifyLive], ['Ghana 🇬🇭', s.ghana], ['USA 🇺🇸', s.usa],
+      ['Prefer email', s.preferEmail], ['Prefer SMS', s.preferSms], ['Prefer WhatsApp', s.preferWhatsApp]
+    ].map(function (c) { return '<div class="card"><b>' + c[1] + '</b><span>' + c[0] + '</span></div>'; }).join('');
+
+    $('liveState').textContent = d.isLive ? 'The website is currently showing the LIVE banner.' : 'Not live yet. The website shows the countdown.';
+    if (d.livestreamUrl) $('liveUrl').value = d.livestreamUrl;
+
+    var pill = function (a) {
+      var cls = a === 'In person' ? 'inperson' : a === 'Online' ? 'online' : 'no';
+      return '<span class="pill ' + cls + '">' + a + '</span>';
+    };
+    $('guestTable').innerHTML = !d.guests.length ? '<p class="hint">No RSVPs yet — submit one from the website to test!</p>' :
+      '<table><tr><th>Name</th><th>Attending</th><th>Guests</th><th>Contact</th><th>Phone</th><th>Email</th><th>Live alert</th><th>Message</th></tr>' +
+      d.guests.map(function (g) {
+        return '<tr><td><b>' + esc(g.name) + '</b><br><span class="hint">' + esc(g.country || '') + '</span></td><td>' + pill(g.attending) + '</td><td>' +
+          (g.guests || '') + '</td><td>' + esc(g.contact) + '</td><td>' + esc(g.phone) + '</td><td>' + esc(g.email) + '</td><td>' +
+          (g.notify === 'Yes' ? '🔔' : '') + '</td><td>' + esc(g.message || '') + '</td></tr>';
+      }).join('') + '</table>';
+  }
+
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+
+  function busy(btn, fn) {
+    btn.disabled = true;
+    fn(function () { btn.disabled = false; });
+  }
+
+  function show(el, ok, text) { el.className = 'status ' + (ok ? 'ok' : 'err'); el.textContent = text; }
+
+  $('btnSend').onclick = function () {
+    var n = confirm('Send this message to the selected guests now?');
+    if (!n) return;
+    busy(this, function (done) {
+      google.script.run.withSuccessHandler(function (r) {
+        show($('msgStatus'), true, 'Done! Sent: ' + r.sent + ', failed: ' + r.failed + ' (of ' + r.total + ')' + (r.notes.length ? ' — ' + r.notes.join('; ') : ''));
+        done(); refresh();
+      }).withFailureHandler(function (e) { show($('msgStatus'), false, e.message); done(); })
+        .sendBlastApi(KEY, { audience: $('audience').value, channel: $('channel').value, subject: $('subject').value, body: $('body').value });
+    });
+  };
+
+  $('btnTest').onclick = function () {
+    busy(this, function (done) {
+      google.script.run.withSuccessHandler(function (r) {
+        show($('msgStatus'), true, 'Test sent ✓ ' + (r.email || '') + ' ' + (r.sms || ''));
+        done();
+      }).withFailureHandler(function (e) { show($('msgStatus'), false, e.message); done(); })
+        .sendTestApi(KEY, { channel: $('channel').value === 'sms' ? 'sms' : 'email', subject: $('subject').value, body: $('body').value });
+    });
+  };
+
+  $('btnSaveLive').onclick = function () {
+    busy(this, function (done) {
+      google.script.run.withSuccessHandler(function () { show($('liveStatus'), true, 'Link saved. Use GO LIVE when the stream starts.'); done(); refresh(); })
+        .withFailureHandler(function (e) { show($('liveStatus'), false, e.message); done(); })
+        .goLive(KEY, $('liveUrl').value, false);
+    });
+  };
+
+  $('btnGoLive').onclick = function () {
+    if (!$('liveUrl').value) { show($('liveStatus'), false, 'Paste the livestream link first.'); return; }
+    if (!confirm('This flips the website to LIVE and messages everyone who opted in. Go?')) return;
+    busy(this, function (done) {
+      google.script.run.withSuccessHandler(function (r) {
+        show($('liveStatus'), true, '🔴 LIVE! Notified ' + r.sent + ' guests (' + r.failed + ' failed).');
+        done(); refresh();
+      }).withFailureHandler(function (e) { show($('liveStatus'), false, e.message); done(); })
+        .goLive(KEY, $('liveUrl').value, true);
+    });
+  };
+
+  $('btnEndLive').onclick = function () {
+    busy(this, function (done) {
+      google.script.run.withSuccessHandler(function () { show($('liveStatus'), true, 'Live ended.'); done(); refresh(); })
+        .withFailureHandler(function (e) { show($('liveStatus'), false, e.message); done(); })
+        .endLive(KEY);
+    });
+  };
+
+  $('btnWa').onclick = function () {
+    busy(this, function (done) {
+      google.script.run.withSuccessHandler(function (links) {
+        $('waLinks').innerHTML = !links.length ? '<p class="hint">No guests with phone numbers yet.</p>' :
+          links.map(function (l) { return '<a href="' + l.url + '" target="_blank">💬 ' + esc(l.name) + ' (' + esc(l.phone) + ')</a>'; }).join('');
+        done();
+      }).withFailureHandler(function (e) { $('waLinks').innerHTML = '<p class="hint">' + esc(e.message) + '</p>'; done(); })
+        .getWhatsAppLinks(KEY, $('waBody').value, $('audience').value);
+    });
+  };
+
+  refresh();
+</script>
+</body>
+</html>
