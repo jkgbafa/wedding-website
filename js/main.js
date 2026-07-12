@@ -5,29 +5,16 @@
 
   var $ = function (id) { return document.getElementById(id); };
 
-  // ---------- opening splash (stays until the guest scrolls or taps) ----------
-  var splash = $("splash");
-  var dismissed = false;
-  function dismissSplash() {
-    if (dismissed || !splash) return;
-    dismissed = true;
-    document.body.style.overflow = "";
-    splash.classList.add("leaving");
-    setTimeout(function () { splash.classList.add("gone"); }, 1000);
+  // ---------- nav theme: transparent/white over the cover, solid once scrolled ----------
+  var navEl = $("nav");
+  var cover = $("home");
+  function updateNavTheme() {
+    var trigger = (cover ? cover.offsetHeight : window.innerHeight) - 80;
+    navEl.classList.toggle("scrolled", window.scrollY > trigger);
   }
-  if (splash) {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      dismissed = true; // CSS hides it entirely
-    } else {
-      if ("scrollRestoration" in history) history.scrollRestoration = "manual";
-      window.scrollTo(0, 0);
-      document.body.style.overflow = "hidden";
-      window.addEventListener("wheel", dismissSplash, { passive: true, once: true });
-      window.addEventListener("touchmove", dismissSplash, { passive: true, once: true });
-      window.addEventListener("keydown", dismissSplash, { once: true });
-      splash.addEventListener("click", dismissSplash, { once: true });
-    }
-  }
+  updateNavTheme();
+  window.addEventListener("scroll", updateNavTheme, { passive: true });
+  window.addEventListener("resize", updateNavTheme);
 
   // ---------- scroll reveals ----------
   var io = new IntersectionObserver(function (entries) {
@@ -37,47 +24,35 @@
   }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
   document.querySelectorAll(".fade-up").forEach(function (el) { io.observe(el); });
 
-  // ---------- hanging polaroids: parallax drift + pendulum sway ----------
-  var polaroids = Array.prototype.slice.call(document.querySelectorAll(".polaroid"));
-  if (polaroids.length && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  // ---------- hanging polaroids: gentle scroll parallax (drift only) ----------
+  // Only the margin-hung ones drift; the story row stays put so hover-shake is clean.
+  var hangers = Array.prototype.slice.call(document.querySelectorAll(".polaroid.pol-left, .polaroid.pol-right"));
+  if (hangers.length && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     var polData = [];
     function measurePolaroids() {
-      polData = polaroids.map(function (p) {
-        p.style.transform = "";                       // measure untransformed
+      polData = hangers.map(function (p) {
         var r = p.getBoundingClientRect();
         return { el: p, docTop: r.top + window.scrollY, h: r.height, depth: parseFloat(p.dataset.depth || "0.12") };
       });
+      applyDrift();
     }
-    measurePolaroids();
-    window.addEventListener("load", measurePolaroids);
-    window.addEventListener("resize", measurePolaroids);
-
-    // scroll drives the swing; a springy CSS transition does the easing,
-    // and a settle timer swings everything gently back to rest.
-    var lastY = window.scrollY, queued = false, settleTimer = null;
-    function applyPolaroids(sway) {
+    var queued = false;
+    function applyDrift() {
       var y = window.scrollY, vh = window.innerHeight;
       polData.forEach(function (d) {
         var mid = d.docTop - y + d.h / 2 - vh / 2;
-        var drift = (-mid * d.depth).toFixed(1);
-        d.el.style.transform = "translateY(" + drift + "px) rotate(calc(var(--tilt) + " + sway.toFixed(2) + "deg))";
+        d.el.style.setProperty("--drift", (-mid * d.depth).toFixed(1) + "px");
       });
     }
     function onScroll() {
       if (queued) return;
       queued = true;
-      requestAnimationFrame(function () {
-        queued = false;
-        var y = window.scrollY;
-        var sway = Math.max(-7, Math.min(7, (y - lastY) * 0.22));
-        lastY = y;
-        applyPolaroids(sway);
-        clearTimeout(settleTimer);
-        settleTimer = setTimeout(function () { applyPolaroids(0); }, 130);
-      });
+      requestAnimationFrame(function () { queued = false; applyDrift(); });
     }
+    measurePolaroids();
+    window.addEventListener("load", measurePolaroids);
+    window.addEventListener("resize", measurePolaroids);
     window.addEventListener("scroll", onScroll, { passive: true });
-    applyPolaroids(0);
   }
 
   // ---------- scrollspy (highlight nav link for section in view) ----------
