@@ -33,7 +33,7 @@ var CONFIG = {
   SPREADSHEET_NAME: 'Joshua & Lucia Wedding — RSVPs',
   // Where test messages and error alerts go:
   COUPLE_EMAIL: Session.getActiveUser().getEmail() || '',
-  COUPLE_PHONE: ''                      // e.g. +14045551234 — used by "send test SMS"
+  COUPLE_PHONE: '+17029458407, +233530709044, +233549556476' // comma-separated — used by "send test SMS"
 };
 
 var SHEETS = { RSVP: 'RSVPs', DASH: 'Dashboard', SETTINGS: 'Settings', TEMPLATES: 'Reminder Templates', LOG: 'Message Log' };
@@ -99,7 +99,7 @@ function setupSettingsSheet_(ss) {
     ['IS_LIVE', 'NO', 'YES = website shows the Watch Live button'],
     ['WEBSITE_URL', '', 'Your GitHub Pages URL, e.g. https://username.github.io/wedding'],
     ['COUPLE_EMAIL', CONFIG.COUPLE_EMAIL, 'Test messages and daily digests go here'],
-    ['COUPLE_PHONE', CONFIG.COUPLE_PHONE, 'For test SMS, in +233… or +1… format'],
+    ['COUPLE_PHONE', CONFIG.COUPLE_PHONE, 'For test SMS — one or more numbers, comma-separated, in +233… / +1… format'],
     ['TWILIO_SID', '', 'Optional — from twilio.com console, enables SMS'],
     ['TWILIO_AUTH_TOKEN', '', 'Optional — Twilio auth token'],
     ['TWILIO_FROM', '', 'Optional — your Twilio phone number, e.g. +18445551234'],
@@ -518,9 +518,10 @@ function sendTestApi(key, opts) {
   }
   if (opts.channel === 'sms') {
     if (!twilioConfigured_()) throw new Error('Twilio not configured yet — add TWILIO_SID / TWILIO_AUTH_TOKEN / TWILIO_FROM in the Settings tab.');
-    if (!me.phone) throw new Error('Add COUPLE_PHONE in the Settings tab first.');
-    sendSms_(me.phone, body);
-    result.sms = 'sent to ' + me.phone;
+    var phones = String(me.phone).split(',').map(function (p) { return p.trim(); }).filter(String);
+    if (!phones.length) throw new Error('Add COUPLE_PHONE in the Settings tab first.');
+    phones.forEach(function (p) { sendSms_(p, body); });
+    result.sms = 'sent to ' + phones.join(', ');
   }
   return result;
 }
