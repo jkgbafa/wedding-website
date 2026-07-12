@@ -11,7 +11,7 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💍</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&family=Sacramento&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&family=Cormorant+Garamond:ital,wght@1,400;1,500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -19,9 +19,13 @@
 <!-- ================= OPENING SPLASH ================= -->
 <div id="splash" class="splash" aria-hidden="true">
   <div class="splash-inner">
-    <p class="splash-monogram"><span>j</span><svg class="splash-heart" viewBox="0 0 32 28" aria-hidden="true"><path d="M16 26C8 19 2 13.5 2 8.5 2 4.6 5 2 8.4 2c2.9 0 5.4 1.8 7.6 5 2.2-3.2 4.7-5 7.6-5C27 2 30 4.6 30 8.5c0 5-6 10.5-14 17.5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>l</span></p>
+    <img class="splash-mono" src="assets/monogram-white.png" alt="">
     <p class="splash-names">Joshua&nbsp;&amp;&nbsp;Lucia</p>
     <p class="splash-date">07&nbsp;.&nbsp;11&nbsp;.&nbsp;26</p>
+  </div>
+  <div class="splash-hint">
+    <span>scroll to open</span>
+    <span class="splash-hint-line"></span>
   </div>
 </div>
 
@@ -31,7 +35,7 @@
 </a>
 
 <nav class="nav" id="nav">
-  <span class="nav-mono">j<svg class="nav-heart" viewBox="0 0 32 28" aria-hidden="true"><path d="M16 26C8 19 2 13.5 2 8.5 2 4.6 5 2 8.4 2c2.9 0 5.4 1.8 7.6 5 2.2-3.2 4.7-5 7.6-5C27 2 30 4.6 30 8.5c0 5-6 10.5-14 17.5z" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>l</span>
+  <a class="nav-mono" href="#home" aria-label="Joshua and Lucia — home"></a>
   <div class="nav-links" id="navLinks">
     <a href="#home">Home</a>
     <a href="#story">Our Story</a>
@@ -255,6 +259,7 @@
 </section>
 
 <footer class="footer">
+  <div class="footer-mono" aria-hidden="true"></div>
   <p class="footer-script">Joshua &amp; Lucia</p>
   <p class="footer-date">07 . 11 . 26 — Mampong, Ghana</p>
 </footer>

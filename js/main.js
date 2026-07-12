@@ -5,21 +5,28 @@
 
   var $ = function (id) { return document.getElementById(id); };
 
-  // ---------- opening splash ----------
+  // ---------- opening splash (stays until the guest scrolls or taps) ----------
   var splash = $("splash");
   var dismissed = false;
   function dismissSplash() {
     if (dismissed || !splash) return;
     dismissed = true;
+    document.body.style.overflow = "";
     splash.classList.add("leaving");
     setTimeout(function () { splash.classList.add("gone"); }, 1000);
   }
   if (splash) {
-    document.body.style.overflow = "hidden";
-    var release = function () { document.body.style.overflow = ""; dismissSplash(); };
-    setTimeout(release, 2800);                    // auto-reveal
-    splash.addEventListener("click", release);    // or tap to skip
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) release();
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      dismissed = true; // CSS hides it entirely
+    } else {
+      if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+      window.scrollTo(0, 0);
+      document.body.style.overflow = "hidden";
+      window.addEventListener("wheel", dismissSplash, { passive: true, once: true });
+      window.addEventListener("touchmove", dismissSplash, { passive: true, once: true });
+      window.addEventListener("keydown", dismissSplash, { once: true });
+      splash.addEventListener("click", dismissSplash, { once: true });
+    }
   }
 
   // ---------- scroll reveals ----------
