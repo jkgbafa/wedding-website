@@ -1,9 +1,53 @@
-/* Joshua & Lucia — site behavior: countdown, live status, RSVP submit */
+/* Joshua & Lucia — splash, scroll reveals, scrollspy, countdown, live status, RSVP submit */
 
 (function () {
   "use strict";
 
   var $ = function (id) { return document.getElementById(id); };
+
+  // ---------- opening splash ----------
+  var splash = $("splash");
+  var dismissed = false;
+  function dismissSplash() {
+    if (dismissed || !splash) return;
+    dismissed = true;
+    splash.classList.add("leaving");
+    setTimeout(function () { splash.classList.add("gone"); }, 1000);
+  }
+  if (splash) {
+    document.body.style.overflow = "hidden";
+    var release = function () { document.body.style.overflow = ""; dismissSplash(); };
+    setTimeout(release, 2800);                    // auto-reveal
+    splash.addEventListener("click", release);    // or tap to skip
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) release();
+  }
+
+  // ---------- scroll reveals ----------
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) {
+      if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); }
+    });
+  }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
+  document.querySelectorAll(".fade-up").forEach(function (el) { io.observe(el); });
+
+  // ---------- scrollspy (highlight nav link for section in view) ----------
+  var navLinks = document.querySelectorAll("#navLinks a");
+  var sections = [];
+  navLinks.forEach(function (a) {
+    var sec = document.querySelector(a.getAttribute("href"));
+    if (sec) sections.push({ a: a, sec: sec });
+  });
+  var spy = new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) {
+      if (!en.isIntersecting) return;
+      sections.forEach(function (s) {
+        var active = s.sec === en.target;
+        s.a.classList.toggle("active", active);
+        if (active) s.a.scrollIntoView({ block: "nearest", inline: "center", behavior: "smooth" });
+      });
+    });
+  }, { rootMargin: "-30% 0px -60% 0px" });
+  sections.forEach(function (s) { spy.observe(s.sec); });
 
   // ---------- countdown ----------
   var target = new Date(WEDDING_ISO).getTime();
@@ -88,8 +132,8 @@
         if (res.ok) {
           statusEl.className = "form-status ok";
           statusEl.textContent = res.updated
-            ? "Your RSVP has been updated — thank you! 💛"
-            : "Thank you! Your RSVP is in — check your email for a confirmation. 💛";
+            ? "Your RSVP has been updated — thank you! 💙"
+            : "Thank you! Your RSVP is in — check your email for a confirmation. 💙";
           form.reset();
           $("guestsField").hidden = true;
         } else {
