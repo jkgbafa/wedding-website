@@ -5,6 +5,20 @@
   "use strict";
   var $ = function (id) { return document.getElementById(id); };
 
+  // reveal background silhouettes when their section scrolls in
+  if ("IntersectionObserver" in window) {
+    var silIO = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        en.target.querySelectorAll(".sil, .sil-svg").forEach(function (s) { s.classList.add("in"); });
+        silIO.unobserve(en.target);
+      });
+    }, { threshold: 0.06 });
+    document.querySelectorAll(".has-sil").forEach(function (el) { silIO.observe(el); });
+  } else {
+    document.querySelectorAll(".sil, .sil-svg").forEach(function (s) { s.classList.add("in"); });
+  }
+
   // ---- dummy code → name (replace/extend on the backend later) ----
   var CODES = {
     "1234": "Uncle Kwame",

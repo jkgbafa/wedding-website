@@ -20,12 +20,23 @@
   }
 
   // ---------- scroll reveals (text + background silhouettes) ----------
+  // Reveal text per-element, but reveal a section's silhouettes by watching the
+  // SECTION — a clip-path "draw" collapses the silhouette's box to zero, which
+  // makes IntersectionObserver think it's off-screen and never fire otherwise.
   var io = new IntersectionObserver(function (entries) {
     entries.forEach(function (en) {
-      if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); }
+      if (!en.isIntersecting) return;
+      var t = en.target;
+      if (t.classList.contains("has-sil")) {
+        t.querySelectorAll(".sil, .sil-svg").forEach(function (s) { s.classList.add("in"); });
+      } else {
+        t.classList.add("in");
+      }
+      io.unobserve(t);
     });
-  }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
-  document.querySelectorAll(".fade-up, .sil, .sil-svg").forEach(function (el) { io.observe(el); });
+  }, { threshold: 0.08, rootMargin: "0px 0px -40px 0px" });
+  document.querySelectorAll(".fade-up").forEach(function (el) { io.observe(el); });
+  document.querySelectorAll(".has-sil").forEach(function (el) { io.observe(el); });
 
   // ---------- tap-to-copy (gift numbers) ----------
   document.querySelectorAll(".copy").forEach(function (btn) {
