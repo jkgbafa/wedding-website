@@ -16,13 +16,31 @@
   window.addEventListener("scroll", updateNavTheme, { passive: true });
   window.addEventListener("resize", updateNavTheme);
 
-  // ---------- scroll reveals ----------
+  // ---------- scroll reveals (text + background silhouettes) ----------
   var io = new IntersectionObserver(function (entries) {
     entries.forEach(function (en) {
       if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); }
     });
   }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
-  document.querySelectorAll(".fade-up").forEach(function (el) { io.observe(el); });
+  document.querySelectorAll(".fade-up, .sil, .sil-svg").forEach(function (el) { io.observe(el); });
+
+  // ---------- tap-to-copy (gift numbers) ----------
+  document.querySelectorAll(".copy").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var val = btn.getAttribute("data-copy");
+      var done = function () {
+        var em = btn.querySelector("em"); var old = em ? em.textContent : "";
+        btn.classList.add("copied"); if (em) em.textContent = "copied!";
+        setTimeout(function () { btn.classList.remove("copied"); if (em) em.textContent = old; }, 1600);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(val).then(done, done);
+      } else {
+        var t = document.createElement("textarea"); t.value = val; document.body.appendChild(t);
+        t.select(); try { document.execCommand("copy"); } catch (e) {} document.body.removeChild(t); done();
+      }
+    });
+  });
 
   // ---------- hanging polaroids: gentle scroll parallax (drift only) ----------
   // Only the margin-hung ones drift; the story row stays put so hover-shake is clean.
@@ -125,69 +143,4 @@
   checkLive();
   setInterval(checkLive, 90000); // re-check every 90s (matters on the big day)
 
-  // ---------- phone hint follows country ----------
-  var hints = {
-    "+233": "Ghana numbers: you can type it with or without the leading 0.",
-    "+1": "US numbers: 10 digits, e.g. 404 555 0123.",
-    "other": "Please include your full country code, e.g. +44 7911 123456."
-  };
-  $("fCountry").addEventListener("change", function () {
-    $("phoneHint").textContent = hints[this.value];
-  });
-
-  // ---------- show guest count only for in-person ----------
-  document.querySelectorAll('input[name="attending"]').forEach(function (radio) {
-    radio.addEventListener("change", function () {
-      $("guestsField").hidden = this.value !== "In person";
-    });
-  });
-
-  // ---------- RSVP submit ----------
-  var form = $("rsvpForm");
-  var statusEl = $("formStatus");
-  var btn = $("submitBtn");
-
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();
-    statusEl.className = "form-status";
-    statusEl.textContent = "";
-
-    if (!form.reportValidity()) return;
-
-    var data = new URLSearchParams(new FormData(form));
-    if (!$("fNotify").checked) data.set("notifyLive", "No");
-
-    if (!APPS_SCRIPT_URL) {
-      statusEl.className = "form-status err";
-      statusEl.textContent = "The RSVP backend isn't connected yet (site owner: paste your Apps Script URL in js/config.js).";
-      return;
-    }
-
-    btn.disabled = true;
-    btn.textContent = "Sending…";
-
-    fetch(APPS_SCRIPT_URL, { method: "POST", body: data })
-      .then(function (r) { return r.json(); })
-      .then(function (res) {
-        if (res.ok) {
-          statusEl.className = "form-status ok";
-          statusEl.textContent = res.updated
-            ? "Your RSVP has been updated — thank you! 💙"
-            : "Thank you! Your RSVP is in — check your email for a confirmation. 💙";
-          form.reset();
-          $("guestsField").hidden = true;
-        } else {
-          statusEl.className = "form-status err";
-          statusEl.textContent = res.error || "Something went wrong — please try again.";
-        }
-      })
-      .catch(function () {
-        statusEl.className = "form-status err";
-        statusEl.textContent = "Couldn't reach the server. Check your connection and try again.";
-      })
-      .finally(function () {
-        btn.disabled = false;
-        btn.textContent = "Send my RSVP";
-      });
-  });
 })();

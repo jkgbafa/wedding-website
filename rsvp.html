@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RSVP — Joshua &amp; Lucia</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💍</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body class="rsvp-page">
+
+<nav class="nav scrolled" id="nav">
+  <a class="nav-mono" href="index.html" aria-label="Joshua and Lucia — home"></a>
+  <div class="nav-links" id="navLinks" style="margin-left:auto;">
+    <a href="index.html">← Back to site</a>
+  </div>
+</nav>
+
+<main class="rsvp-main">
+  <p class="sec-script">kindly reply</p>
+  <h1 class="sec-title">RSVP</h1>
+
+  <!-- STEP 1 — enter code -->
+  <section class="rsvp-panel" id="stepCode">
+    <p class="sec-body">Please enter your RSVP code — you'll find it on your invitation.</p>
+    <div class="code-row">
+      <input id="codeInput" class="code-input" type="text" inputmode="text" autocomplete="off"
+             placeholder="e.g. 1234" aria-label="RSVP code" maxlength="16">
+      <button class="btn" id="codeBtn" type="button">Continue</button>
+    </div>
+    <p class="form-status" id="codeErr" role="status"></p>
+    <button class="linkish" id="noCodeBtn" type="button">I don't have an RSVP code</button>
+  </section>
+
+  <!-- STEP 2 — greeting + form -->
+  <section id="stepForm" hidden>
+    <p class="rsvp-greeting" id="greeting"></p>
+
+    <form id="rsvpForm" class="rsvp-form" novalidate>
+      <input type="hidden" name="rsvpCode" id="fCode">
+
+      <div class="field">
+        <label for="fName">Full name *</label>
+        <input id="fName" name="name" type="text" required autocomplete="name" placeholder="Ama Mensah">
+      </div>
+
+      <div class="field">
+        <label for="fEmail">Email *</label>
+        <input id="fEmail" name="email" type="email" required autocomplete="email" placeholder="you@example.com">
+      </div>
+
+      <div class="field">
+        <label for="fPhone">Phone number *</label>
+        <div class="phone-row">
+          <select id="fCountry" name="countryCode" aria-label="Country code">
+            <option value="+233">🇬🇭 +233</option>
+            <option value="+1">🇺🇸 +1</option>
+            <option value="other">🌍 Other</option>
+          </select>
+          <input id="fPhone" name="phone" type="tel" required autocomplete="tel" placeholder="24 123 4567">
+        </div>
+        <small class="field-hint" id="phoneHint">Ghana numbers: you can type it with or without the leading 0.</small>
+      </div>
+
+      <div class="field">
+        <span class="label">Will you attend? *</span>
+        <div class="choice-row" role="radiogroup">
+          <label class="choice"><input type="radio" name="attending" value="In person" required><span>In person, in Ghana</span></label>
+          <label class="choice"><input type="radio" name="attending" value="Online"><span>Online, via livestream</span></label>
+          <label class="choice"><input type="radio" name="attending" value="Not attending"><span>Sadly can't make it</span></label>
+        </div>
+      </div>
+
+      <div class="field" id="guestsField" hidden>
+        <label for="fGuests">How many in your party, including you?</label>
+        <select id="fGuests" name="guests">
+          <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <span class="label">How should we send you updates &amp; reminders? *</span>
+        <div class="choice-row">
+          <label class="choice"><input type="radio" name="preferredContact" value="Email" required checked><span>Email</span></label>
+          <label class="choice"><input type="radio" name="preferredContact" value="SMS"><span>Text message</span></label>
+          <label class="choice"><input type="radio" name="preferredContact" value="WhatsApp"><span>WhatsApp</span></label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="choice choice-wide">
+          <input type="checkbox" id="fNotify" name="notifyLive" value="Yes" checked>
+          <span>Message me the moment the wedding goes live</span>
+        </label>
+      </div>
+
+      <div class="field">
+        <label for="fMessage">A note for Joshua &amp; Lucia (optional)</label>
+        <textarea id="fMessage" name="message" rows="3" placeholder="We're so happy for you both…"></textarea>
+      </div>
+
+      <button type="submit" class="btn" id="submitBtn">Send my RSVP</button>
+      <p class="form-status" id="formStatus" role="status"></p>
+    </form>
+  </section>
+
+  <!-- STEP 3 — thank you -->
+  <section id="stepThanks" hidden class="rsvp-thanks">
+    <div class="thanks-mono" aria-hidden="true"></div>
+    <h2 id="thanksTitle">Thank you!</h2>
+    <p id="thanksBody" class="sec-body"></p>
+    <a class="btn" href="index.html">Back to our site</a>
+  </section>
+</main>
+
+<!-- confirm modal -->
+<div class="modal" id="confirmModal" hidden>
+  <div class="modal-card">
+    <h3>Are you sure?</h3>
+    <p>You've said you won't be there in person, and you haven't asked us to message you when we go live. We'd love for you to watch online — shall we send you the livestream link?</p>
+    <div class="modal-actions">
+      <button class="btn" id="modalNotify" type="button">Yes, notify me when live</button>
+      <button class="btn btn-ghost" id="modalProceed" type="button">No thanks, submit as is</button>
+    </div>
+  </div>
+</div>
+
+<footer class="rsvp-foot has-sil">
+  <div class="sil" aria-hidden="true" style="--sil-img:url(../assets/sil-couple-2.png); --sil-op:.1; width:clamp(200px,30vw,320px); aspect-ratio:788/1199; left:0; right:0; margin-inline:auto; top:6%;"></div>
+  <div class="polaroid-row" style="margin-top:0;">
+    <figure class="polaroid" style="--tilt:-5deg"><img src="photos/joshua-lucia-33.jpg" alt="" loading="lazy"></figure>
+    <figure class="polaroid" style="--tilt:4deg"><img src="photos/joshua-lucia-20.jpg" alt="" loading="lazy"></figure>
+  </div>
+  <p class="footer-script" style="margin-top:34px;">Joshua &amp; Lucia</p>
+  <p class="footer-date">Saturday, November 7, 2026 — Mampong, Ghana</p>
+</footer>
+
+<script src="js/config.js"></script>
+<script src="js/rsvp.js"></script>
+</body>
+</html>

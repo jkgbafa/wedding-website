@@ -38,8 +38,8 @@ var CONFIG = {
 
 var SHEETS = { RSVP: 'RSVPs', DASH: 'Dashboard', SETTINGS: 'Settings', TEMPLATES: 'Reminder Templates', LOG: 'Message Log' };
 
-var RSVP_HEADERS = ['Timestamp', 'Full Name', 'Email', 'Phone', 'Country', 'Attending', 'Guests', 'Preferred Contact', 'Notify When Live', 'Message to Couple', 'Status'];
-var COL = { TS: 1, NAME: 2, EMAIL: 3, PHONE: 4, COUNTRY: 5, ATTENDING: 6, GUESTS: 7, CONTACT: 8, NOTIFY: 9, MESSAGE: 10, STATUS: 11 };
+var RSVP_HEADERS = ['Timestamp', 'Full Name', 'Email', 'Phone', 'Country', 'Attending', 'Guests', 'Preferred Contact', 'Notify When Live', 'Message to Couple', 'Status', 'RSVP Code'];
+var COL = { TS: 1, NAME: 2, EMAIL: 3, PHONE: 4, COUNTRY: 5, ATTENDING: 6, GUESTS: 7, CONTACT: 8, NOTIFY: 9, MESSAGE: 10, STATUS: 11, CODE: 12 };
 
 // ---------------------------------------------------------------------------
 // SETUP — run this once
@@ -231,6 +231,7 @@ function doPost(e) {
     var contact = String(p.preferredContact || 'Email').trim();
     var notify = String(p.notifyLive || 'No') === 'Yes' ? 'Yes' : 'No';
     var message = String(p.message || '').trim().slice(0, 1000);
+    var rsvpCode = String(p.rsvpCode || '').trim().slice(0, 24);
 
     if (!name || !email || !attending) {
       return json_({ ok: false, error: 'Please fill in your name, email, and whether you can attend.' });
@@ -246,7 +247,7 @@ function doPost(e) {
     try {
       var sh = rsvpSheet_();
       var existingRow = findRowByEmail_(sh, email);
-      var rowValues = [new Date(), name, email, norm.phone, norm.country, attending, attending === 'In person' ? guests : 0, contact, notify, message, existingRow ? 'Updated' : 'New'];
+      var rowValues = [new Date(), name, email, norm.phone, norm.country, attending, attending === 'In person' ? guests : 0, contact, notify, message, existingRow ? 'Updated' : 'New', rsvpCode];
       var updated = false;
       if (existingRow) {
         sh.getRange(existingRow, 1, 1, rowValues.length).setValues([rowValues]);
