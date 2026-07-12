@@ -37,6 +37,49 @@
   }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
   document.querySelectorAll(".fade-up").forEach(function (el) { io.observe(el); });
 
+  // ---------- hanging polaroids: parallax drift + pendulum sway ----------
+  var polaroids = Array.prototype.slice.call(document.querySelectorAll(".polaroid"));
+  if (polaroids.length && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    var polData = [];
+    function measurePolaroids() {
+      polData = polaroids.map(function (p) {
+        p.style.transform = "";                       // measure untransformed
+        var r = p.getBoundingClientRect();
+        return { el: p, docTop: r.top + window.scrollY, h: r.height, depth: parseFloat(p.dataset.depth || "0.12") };
+      });
+    }
+    measurePolaroids();
+    window.addEventListener("load", measurePolaroids);
+    window.addEventListener("resize", measurePolaroids);
+
+    // scroll drives the swing; a springy CSS transition does the easing,
+    // and a settle timer swings everything gently back to rest.
+    var lastY = window.scrollY, queued = false, settleTimer = null;
+    function applyPolaroids(sway) {
+      var y = window.scrollY, vh = window.innerHeight;
+      polData.forEach(function (d) {
+        var mid = d.docTop - y + d.h / 2 - vh / 2;
+        var drift = (-mid * d.depth).toFixed(1);
+        d.el.style.transform = "translateY(" + drift + "px) rotate(calc(var(--tilt) + " + sway.toFixed(2) + "deg))";
+      });
+    }
+    function onScroll() {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(function () {
+        queued = false;
+        var y = window.scrollY;
+        var sway = Math.max(-7, Math.min(7, (y - lastY) * 0.22));
+        lastY = y;
+        applyPolaroids(sway);
+        clearTimeout(settleTimer);
+        settleTimer = setTimeout(function () { applyPolaroids(0); }, 130);
+      });
+    }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    applyPolaroids(0);
+  }
+
   // ---------- scrollspy (highlight nav link for section in view) ----------
   var navLinks = document.querySelectorAll("#navLinks a");
   var sections = [];
@@ -55,6 +98,21 @@
     });
   }, { rootMargin: "-30% 0px -60% 0px" });
   sections.forEach(function (s) { spy.observe(s.sec); });
+
+  // ---------- mobile hamburger menu ----------
+  var nav = $("nav");
+  var burger = $("navBurger");
+  burger.addEventListener("click", function () {
+    var open = nav.classList.toggle("open");
+    burger.setAttribute("aria-expanded", open ? "true" : "false");
+    burger.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+  });
+  document.querySelectorAll("#navLinks a").forEach(function (a) {
+    a.addEventListener("click", function () {
+      nav.classList.remove("open");
+      burger.setAttribute("aria-expanded", "false");
+    });
+  });
 
   // ---------- countdown ----------
   var target = new Date(WEDDING_ISO).getTime();

@@ -11,7 +11,7 @@
   --blue-dark: #22354d;   /* dark sections */
   --blue-pale: #e8edf4;
   --line: #e4e1da;
-  --sans: "Quicksand", "Avenir Next", sans-serif;
+  --sans: "Jost", "Avenir Next", sans-serif;
   --script: "Cormorant Garamond", Georgia, serif;
 }
 
@@ -26,6 +26,7 @@ body {
   line-height: 1.7;
   color: var(--ink);
   background: var(--paper);
+  overflow-x: hidden;
 }
 
 img { display: block; max-width: 100%; }
@@ -127,6 +128,39 @@ img { display: block; max-width: 100%; }
 .nav-links a:hover { color: var(--blue-deep); }
 .nav-links a.active { color: var(--blue-deep); border-bottom-color: var(--blue); }
 
+/* hamburger — phones only */
+.nav-burger {
+  display: none;
+  margin-left: auto;
+  background: none; border: 0; cursor: pointer;
+  padding: 10px 4px; width: 40px;
+}
+.nav-burger span {
+  display: block; height: 2px; width: 24px; margin: 5px auto;
+  background: var(--blue-deep); border-radius: 2px;
+  transition: transform .25s ease, opacity .2s ease;
+}
+.nav.open .nav-burger span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav.open .nav-burger span:nth-child(2) { opacity: 0; }
+.nav.open .nav-burger span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+@media (max-width: 720px) {
+  .nav { flex-wrap: wrap; }
+  .nav-burger { display: block; }
+  .nav-links {
+    display: none;
+    flex-basis: 100%; flex-direction: column; gap: 0;
+    padding: 8px 0 14px; overflow: visible;
+  }
+  .nav.open .nav-links { display: flex; }
+  .nav-links a {
+    padding: 13px 4px; border-bottom: 1px solid var(--line);
+    font-size: 13px;
+  }
+  .nav-links a:last-child { border-bottom: 0; }
+  .nav-links a.active { border-bottom-color: var(--line); }
+}
+
 /* ================= home ================= */
 .home {
   text-align: center;
@@ -203,6 +237,7 @@ img { display: block; max-width: 100%; }
 
 /* ================= sections ================= */
 .section {
+  position: relative;
   padding: clamp(72px, 10vw, 130px) clamp(20px, 6vw, 64px);
   max-width: 980px; margin: 0 auto; text-align: center;
 }
@@ -226,7 +261,7 @@ img { display: block; max-width: 100%; }
   color: var(--blue-pale);
 }
 
-/* ================= gallery ================= */
+/* ================= gallery (side-by-side trio) ================= */
 .gallery {
   display: grid; grid-template-columns: 1fr 1.15fr 1fr;
   gap: clamp(10px, 2vw, 20px);
@@ -239,6 +274,45 @@ img { display: block; max-width: 100%; }
 @media (max-width: 680px) {
   .gallery { grid-template-columns: 1fr; max-width: 420px; margin-left: auto; margin-right: auto; }
   .g-item img, .g-item.g-tall img { aspect-ratio: 4 / 3.4; }
+}
+
+/* ================= hanging polaroids ================= */
+.polaroid {
+  --tilt: 3deg;
+  width: clamp(160px, 15vw, 215px);
+  background: #fff;
+  padding: 10px 10px 38px;   /* classic thick polaroid bottom, no caption */
+  box-shadow: 0 18px 38px -14px rgba(34, 53, 77, .45);
+  transform: rotate(var(--tilt));
+  transform-origin: 50% -14px;   /* swings from the tape */
+  transition: transform .8s cubic-bezier(.3, 1.45, .55, 1); /* springy settle */
+  will-change: transform;
+  z-index: 6;
+}
+.polaroid::before {              /* washi tape */
+  content: "";
+  position: absolute; top: -12px; left: 50%;
+  width: 74px; height: 24px;
+  transform: translateX(-50%) rotate(-5deg);
+  background: rgba(226, 222, 210, .85);
+  box-shadow: 0 2px 5px rgba(34, 53, 77, .18);
+}
+.polaroid img {
+  width: 100%; aspect-ratio: 1 / 1.02; object-fit: cover;
+}
+
+/* wide screens: hang them in the page margins */
+@media (min-width: 1280px) {
+  .polaroid { position: absolute; top: 30%; }
+  .polaroid.pol-right { right: calc((100% - 100vw) / 2 + 3vw); }
+  .polaroid.pol-left { left: calc((100% - 100vw) / 2 + 3vw); }
+  #rsvp .polaroid { top: 42%; }
+}
+/* smaller screens: they sit in the flow, still tilted + swaying */
+@media (max-width: 1279px) {
+  .polaroid { position: relative; margin: 44px auto 0; }
+  .polaroid.pol-left { margin-left: clamp(16px, 12vw, 160px); }
+  .polaroid.pol-right { margin-right: clamp(16px, 12vw, 160px); margin-left: auto; }
 }
 
 /* ================= venue ================= */
