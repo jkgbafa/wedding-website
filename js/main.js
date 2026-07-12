@@ -5,16 +5,19 @@
 
   var $ = function (id) { return document.getElementById(id); };
 
-  // ---------- nav theme: transparent/white over the cover, solid once scrolled ----------
+  // ---------- nav theme: white over the cover, solid once scrolled past it ----------
+  // Uses an IntersectionObserver (not scroll math) so it flips exactly once at the
+  // cover's edge — no flicker in the thin transition band.
   var navEl = $("nav");
   var cover = $("home");
-  function updateNavTheme() {
-    var trigger = (cover ? cover.offsetHeight : window.innerHeight) - 80;
-    navEl.classList.toggle("scrolled", window.scrollY > trigger);
+  if (cover && "IntersectionObserver" in window) {
+    var navIO = new IntersectionObserver(function (entries) {
+      navEl.classList.toggle("scrolled", !entries[0].isIntersecting);
+    }, { rootMargin: "-66px 0px 0px 0px", threshold: 0 });
+    navIO.observe(cover);
+  } else {
+    navEl.classList.add("scrolled");
   }
-  updateNavTheme();
-  window.addEventListener("scroll", updateNavTheme, { passive: true });
-  window.addEventListener("resize", updateNavTheme);
 
   // ---------- scroll reveals (text + background silhouettes) ----------
   var io = new IntersectionObserver(function (entries) {

@@ -50,7 +50,7 @@ img { display: block; max-width: 100%; }
 @keyframes coverTexIn { from { opacity: 0; } to { opacity: .14; } }
 .cover-inner { position: relative; z-index: 1; }
 .cover-mono {
-  width: clamp(230px, 46vw, 440px);
+  width: clamp(150px, 26vw, 244px);
   margin: 0 auto;
   opacity: 0; animation: coverIn 1.4s ease .2s forwards;
 }
@@ -125,10 +125,10 @@ img { display: block; max-width: 100%; }
   border-bottom-color: var(--line);
 }
 .nav-mono {
-  flex: 0 0 auto; width: 58px; height: 26px; display: block;
+  flex: 0 0 auto; width: 30px; height: 38px; display: block;
   background: #fff;
-  -webkit-mask: url("../assets/monogram-white.png") no-repeat center / contain;
-  mask: url("../assets/monogram-white.png") no-repeat center / contain;
+  -webkit-mask: url("../assets/monogram-jl.png") no-repeat center / contain;
+  mask: url("../assets/monogram-jl.png") no-repeat center / contain;
   transition: background .3s ease;
 }
 .nav.scrolled .nav-mono, .nav.open .nav-mono { background: var(--blue-deep); }
@@ -537,16 +537,21 @@ img { display: block; max-width: 100%; }
   color: var(--blue); font-size: 24px; font-weight: 300; transition: transform .2s;
 }
 .faq-list details[open] summary::after { transform: translateY(-50%) rotate(45deg); }
-.faq-list details p { padding: 0 0 18px; color: #5a6170; font-size: 15.5px; }
+.faq-list details p { padding: 0 0 14px; color: #5a6170; font-size: 15.5px; }
+.faq-list details p:last-child { padding-bottom: 18px; }
+.faq-list details p b { color: var(--blue-deep); font-weight: 600; }
+.faq-link { color: var(--blue-deep); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+.faq-link:hover { color: var(--blue); }
+.t-body p b { color: var(--blue-deep); font-weight: 600; }
 
 /* ================= footer ================= */
 .footer { text-align: center; padding: 70px 20px 60px; border-top: 1px solid var(--line); }
 .footer-mono {
-  width: clamp(130px, 20vw, 180px); height: clamp(56px, 9vw, 78px);
+  width: clamp(72px, 11vw, 98px); height: clamp(92px, 14vw, 125px);
   margin: 0 auto 14px;
   background: var(--blue-deep);
-  -webkit-mask: url("../assets/monogram-white.png") no-repeat center / contain;
-  mask: url("../assets/monogram-white.png") no-repeat center / contain;
+  -webkit-mask: url("../assets/monogram-jl.png") no-repeat center / contain;
+  mask: url("../assets/monogram-jl.png") no-repeat center / contain;
 }
 .footer-script {
   font-family: var(--script); font-style: italic; font-weight: 500;
@@ -586,10 +591,10 @@ img { display: block; max-width: 100%; }
 
 .rsvp-thanks { padding-top: 20px; }
 .thanks-mono {
-  width: clamp(150px, 30vw, 210px); height: clamp(64px, 12vw, 92px); margin: 0 auto 22px;
+  width: clamp(86px, 16vw, 116px); height: clamp(110px, 20vw, 148px); margin: 0 auto 22px;
   background: var(--blue-deep);
-  -webkit-mask: url("../assets/monogram-white.png") no-repeat center / contain;
-          mask: url("../assets/monogram-white.png") no-repeat center / contain;
+  -webkit-mask: url("../assets/monogram-jl.png") no-repeat center / contain;
+          mask: url("../assets/monogram-jl.png") no-repeat center / contain;
 }
 .rsvp-thanks h2 {
   font-family: var(--script); font-weight: 500; font-size: clamp(30px, 6vw, 48px);
